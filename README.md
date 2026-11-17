@@ -69,19 +69,20 @@ Sends N events (default 1000) with about 10% repeated `eventId`s, then compares 
 
 From a clean clone, `mvn verify`: **20 tests, 0 failures, BUILD SUCCESS**; JaCoCo line coverage **88.1 %** (104 of 118 lines).
 
-Load run (1000 events, local Docker Kafka + PostgreSQL):
+Load runs (1000 events each, 900 unique, 100 duplicates, local Docker Kafka + PostgreSQL): **6 of 6 runs passed, credited_total equal to expected_total every time, double-credits 0.** Elapsed seconds (send + drain) ranged from 2.63 to 8.35 (the slowest was the first run after starting the app).
 
-| Measure | Value |
-|---|---|
-| events sent | 1000 |
-| unique events | 900 |
-| duplicates ignored | 100 |
-| expected_total | 225283 |
-| credited_total | 225283 |
-| double-credits | 0 |
-| elapsed seconds (send + drain) | 3.68 |
+| Run | expected_total | credited_total | double-credits | elapsed s |
+|---|---|---|---|---|
+| 1 | 225283 | 225283 | 0 | 3.68 |
+| 2 | 217195 | 217195 | 0 | 8.35 |
+| 3 | 225537 | 225537 | 0 | 3.24 |
+| 4 | 225362 | 225362 | 0 | 2.70 |
+| 5 | 218988 | 218988 | 0 | 3.05 |
+| 6 | 218445 | 218445 | 0 | 2.63 |
 
-Single run on one laptop; not a benchmark.
+One laptop, not a benchmark.
+
+Dependency scan (OSV database, 170 artifacts): known advisories in Tomcat, Jackson, the PostgreSQL driver and others were patched with version overrides. One accepted exception remains: two Spring MVC advisories in features this app does not use, fixed only in Spring 7.
 
 ## Limits
 
