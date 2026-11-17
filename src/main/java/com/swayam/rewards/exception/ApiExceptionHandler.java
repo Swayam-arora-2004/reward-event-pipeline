@@ -24,6 +24,7 @@ public class ApiExceptionHandler {
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
         List<String> fields = ex.getBindingResult().getFieldErrors().stream()
                 .map(FieldError::getField)
+                .distinct()
                 .toList();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse("validation failed", fields));
